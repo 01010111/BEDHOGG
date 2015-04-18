@@ -1,3 +1,8 @@
+# CPP target files
+export\
+export/
+export
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -14,9 +19,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# Windows shortcuts
-*.lnk
-
 # =========================
 # Operating System Files
 # =========================
@@ -28,6 +30,9 @@ $RECYCLE.BIN/
 .AppleDouble
 .LSOverride
 
+# Icon must ends with two \r.
+Icon
+
 # Thumbnails
 ._*
 
@@ -35,9 +40,9 @@ $RECYCLE.BIN/
 .Spotlight-V100
 .Trashes
 
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+# sublime workspace and project files on alan's system
+redshift-blueshift.sublime-project
+redshift-blueshift.sublime-workspace
+
+# packages installed as dependencies of dynamics and node.js
+dynamics/node_modules
