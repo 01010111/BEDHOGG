@@ -25,6 +25,7 @@ class PillowFlight extends FlxSprite
 		red = RED;
 		acceleration.y = 500;
 		Reg.state.pillows.add(this);
+		Reg.sounds.play(Reg.sounds.throwing, 0.1);
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -57,6 +58,7 @@ class PillowFlight extends FlxSprite
 	
 	function superDuperKill():Void
 	{
+		Reg.pillows++;
 		Reg.state.publicPillows++;
 		super.kill();
 	}

@@ -18,7 +18,7 @@ class Controller extends FlxGroup
 {
 	
 	public var isAI:Bool;
-	public var canControl:Bool;
+	public var canControl:Bool = true;
 	public var pad:FlxGamepad;
 	
 	public function new(AI:Bool = false, ?PAD:FlxGamepad) 
@@ -64,10 +64,10 @@ class Controller extends FlxGroup
 				if (FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT) left = true;
 				if (FlxG.keys.pressed.RIGHT && !FlxG.keys.pressed.LEFT) right = true;
 				if (FlxG.keys.justPressed.SPACE) jump = true;
-				if (FlxG.keys.anyPressed([FlxKey.SHIFT, FlxKey.X])) charge = true;
-				if (FlxG.keys.justPressed.Z) smallSwing = true;
-				if (FlxG.keys.justReleased.X) bigSwing = true;
-				if (FlxG.keys.justReleased.SHIFT) throwing = true;
+				if (FlxG.keys.anyPressed([FlxKey.A, FlxKey.W])) charge = true;
+				if (FlxG.keys.justPressed.D) smallSwing = true;
+				if (FlxG.keys.justReleased.W) bigSwing = true;
+				if (FlxG.keys.justReleased.A) throwing = true;
 			}
 		}
 	}
@@ -124,6 +124,9 @@ class Controller extends FlxGroup
 			if (FlxSpriteUtil.isFlickering(Reg.red)) 
 			{
 				if (Reg.blueAdvantage) left = true;
+				else if (Math.random() > 0.9) jump = true;
+				else if (r.x < b.x) right = true;
+				else left = true;
 			}
 			//If AI has no pillow
 			else if (!Reg.blue.hasPillow)
@@ -194,16 +197,16 @@ class Controller extends FlxGroup
 						else throwWindup = new FlxRandom().int(10, 20);
 					}
 					//Else if distance from player to blue is greater than close run towards player and throw
-					else if (r.x - b.x > proximityClose) 
+					else if (r.x - b.x > proximityClose * 2) 
 					{
 						right = true;
-						if (Math.random() > 0.95) throwWindup = new FlxRandom().int(10, 30);
+						if (Math.random() > 0.98) throwWindup = new FlxRandom().int(10, 30);
 					}
 					//Else run toward player and big swing
 					else 
 					{
 						right = true;
-						if (Math.random() > 0.95) swingWindup = new FlxRandom().int(10, 30);
+						if (Math.random() > 0.95) swingWindup = new FlxRandom().int(5, 10);
 					}
 				}
 				//If player is close chance for small swing, small chance for big swing
@@ -217,12 +220,22 @@ class Controller extends FlxGroup
 				{
 					if (r.x - b.x < 0 && rV.x > 0 || r.x - b.x > 0 && rV.x < 0)
 					{
-						if (Math.random() > 0.9) swingWindup = new FlxRandom().int(10, 30);
+						if (Math.random() > 0.98) swingWindup = new FlxRandom().int(10, 30);
 					}
 				}
 			}
 		}
 		
+	}
+	
+	override public function destroy():Void 
+	{
+		
+	}
+	
+	public function superDestroy():Void
+	{
+		super.destroy();
 	}
 	
 }

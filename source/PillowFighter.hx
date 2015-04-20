@@ -44,17 +44,17 @@ class PillowFighter extends FlxSprite
 			Reg.blue = this;
 		}
 		
-		animation.add("idle", [0]);
-		animation.add("run", [0, 1], 8);
-		animation.add("jump", [0]);
-		animation.add("charge", [2]);
-		animation.add("smallSwing", [2, 2, 3, 4, 4, 4], 30, false);
-		animation.add("bigSwing", [5, 6, 6, 6, 6], 30, false);
-		animation.add("throw", [7], 30, false);
-		animation.add("down", [10, 11, 10, 11, 10, 11, 10, 11, 10, 11], 10, false);
-		animation.add("noPillowIdle", [8]);
-		animation.add("noPillowRun", [8, 9], 8);
-		animation.add("noPillowJump", [8]);
+		animation.add("idle", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
+		animation.add("run", [0, 2, 0, 3], 8);
+		animation.add("jump", [2]);
+		animation.add("charge", [for (i in 0...256) i == 0? 4: 5 ], 24, false);
+		animation.add("smallSwing", [2, 5, 6, 7, 8, 8, 8], 30, false);
+		animation.add("bigSwing", [9, 10, 11, 11, 11], 30, false);
+		animation.add("throw", [12], 30, false);
+		animation.add("down", [18, 19, 18, 19, 18, 19, 18, 19, 18, 19], 10, false);
+		animation.add("noPillowIdle", [14, 15], 12);
+		animation.add("noPillowRun", [14, 16, 14, 17], 8);
+		animation.add("noPillowJump", [16]);
 		animation.callback = animCallback;
 		
 		setSize(8, 24);
@@ -115,15 +115,25 @@ class PillowFighter extends FlxSprite
 		if (FlxSpriteUtil.isFlickering(this) || !canControl) controller.canControl = false;
 		else controller.canControl = true;
 		
-		if (controller.charge) 
+		if (controller.charge && hasPillow) 
 		{
 			chargeAmt += (20 - chargeAmt) * 0.075;
-			pillowBox.width += (32 - pillowBox.width) * 0.1;
+			pillowBox.width += (35 - pillowBox.width) * 0.1;
+			if (red)
+			{
+				if (Reg.blue.x < x) facing = FlxObject.LEFT;
+				else facing = FlxObject.RIGHT;
+			}
+			else
+			{
+				if (Reg.red.x < x) facing = FlxObject.LEFT;
+				else facing = FlxObject.RIGHT;
+			}
 		}
 		else 
 		{
 			chargeAmt += (0 - chargeAmt) * 0.1;
-			pillowBox.width += (24 - pillowBox.width) * 0.1;
+			pillowBox.width += (30 - pillowBox.width) * 0.1;
 		}
 		
 		if (controller.jump) jumpTimer = 10;
@@ -147,7 +157,7 @@ class PillowFighter extends FlxSprite
 		else 
 		{
 			if (isTouching(FlxObject.FLOOR) && jumpTimer > 0) jump();
-			if (!controller.left && !controller.right && controller.canControl) velocity.x = acceleration.x = 0;
+			if (!controller.left && !controller.right && controller.canControl) acceleration.x = 0;
 			else if (controller.left) 
 			{
 				facing = FlxObject.LEFT;
@@ -211,6 +221,7 @@ class PillowFighter extends FlxSprite
 		
 		facing == FlxObject.RIGHT? pillowBox.setPosition(getMidpoint().x, y + 2): pillowBox.setPosition(getMidpoint().x - pillowBox.width, y + 2);
 		if (jumpTimer > 0) jumpTimer--;
+		if (acceleration.y < 1200) acceleration.y++;
 	}
 	
 	function smallSwing():Void
@@ -218,6 +229,7 @@ class PillowFighter extends FlxSprite
 		animation.play("smallSwing");
 		velocity.y = 0;
 		acceleration.y = 500;
+		Reg.sounds.play(Reg.sounds.swing, 0.1);
 	}
 	
 	function bigSwing():Void
@@ -225,6 +237,7 @@ class PillowFighter extends FlxSprite
 		animation.play("bigSwing");
 		velocity.y = 0;
 		acceleration.y = 500;
+		Reg.sounds.play(Reg.sounds.swing, 0.25);
 	}
 	
 	function throwing():Void
@@ -241,15 +254,16 @@ class PillowFighter extends FlxSprite
 	function jump():Void
 	{
 		velocity.y = -350;
+		Reg.sounds.play(Reg.sounds.jump, 0.25);
 	}
 	
 	function animCallback(s:String, i:Int, f:Int):Void
 	{
-		if (f == 3) 
+		if (f == 6) 
 		{
-			hit(2);
+			hit(4);
 		}
-		else if (f == 5) 
+		else if (f == 9) 
 		{
 			hit(chargeAmt);
 		}
@@ -293,6 +307,7 @@ class PillowFighter extends FlxSprite
 			health -= Damage;
 			if (health <= 0)
 			{
+				Reg.sounds.play(Reg.sounds.knockDown);
 				var vx:Float;
 				Math.random() < 0.5? vx = -60: vx = 60;
 				if (hasPillow) 
@@ -309,23 +324,26 @@ class PillowFighter extends FlxSprite
 				if (red) 
 				{
 					Reg.score -= 1;
+					Reg.blueKO++;
 				}
 				else
 				{
 					Reg.score += 1;
+					Reg.redKO++;
 				}
 				health = 10;
 			}
 			else 
 			{
+				Reg.sounds.play(Reg.sounds.pillowHit, ZMath.clamp(Damage / 10 * 0.5, 0.1, 0.4));
 				FlxSpriteUtil.flicker(this, 0.25);
 				if (red)
 				{
-					velocity.set((Reg.blue.x - x) * -5, -200);
+					velocity.set(ZMath.clamp((Reg.blue.x - x) * -50, -250, 250), -200);
 				}
 				else
 				{
-					velocity.set((Reg.red.x - x) * -5, -200);
+					velocity.set(ZMath.clamp((Reg.red.x - x) * -50, -250, 250), -200);
 				}
 			}
 		}
