@@ -157,7 +157,7 @@ class MenuState extends FlxState
 		FlxG.sound.music.fadeOut(1);
 		FlxTween.tween(s, { alpha:1 }, 1).onComplete = function(t:FlxTween):Void
 		{
-			FlxG.sound.playMusic("assets/music/play.mp3", 0.3);
+			FlxG.sound.playMusic("assets/music/play.mp3", 0.4);
 			FlxG.switchState(new PlayState());
 		}
 	}

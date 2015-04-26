@@ -63,7 +63,7 @@ class Controller extends FlxGroup
 			{
 				if (FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT) left = true;
 				if (FlxG.keys.pressed.RIGHT && !FlxG.keys.pressed.LEFT) right = true;
-				if (FlxG.keys.justPressed.SPACE) jump = true;
+				if (FlxG.keys.anyJustPressed([FlxKey.SPACE, FlxKey.UP])) jump = true;
 				if (FlxG.keys.anyPressed([FlxKey.A, FlxKey.W])) charge = true;
 				if (FlxG.keys.justPressed.D) smallSwing = true;
 				if (FlxG.keys.justReleased.W) bigSwing = true;

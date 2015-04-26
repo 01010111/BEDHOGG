@@ -5,6 +5,7 @@ import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
 
 /**
  * ...
@@ -18,10 +19,19 @@ class GameOver extends FlxSubState
 	{
 		super();
 		
-		Reg.c1.canControl = true;
-		Reg.c2.canControl = true;
+		//Reg.c1.canControl = true;
+		//Reg.c2.isAI? Reg.c2.canControl = false: Reg.c2.canControl = true;
 		
-		FlxG.sound.music.fadeOut(0.2, 0.2);
+		//FlxG.sound.music.fadeOut(0.2, 0.2);
+		
+		Reg.c1.canControl = false;
+		Reg.c2.canControl = false;
+		
+		new FlxTimer().start(1.5).onComplete = function(t:FlxTimer):Void
+		{
+			Reg.c1.canControl = true;
+			Reg.c2.isAI? Reg.c2.canControl = false: Reg.c2.canControl = true;
+		}
 		
 		var b:FlxSprite = new FlxSprite();
 		b.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
@@ -111,15 +121,21 @@ class GameOver extends FlxSubState
 	}
 	
 	var replay:Bool = true;
+	var timer:Int = 100;
 	
 	override public function update(elapsed:Float):Void 
 	{
-		if (Reg.c1.jump || Reg.c2.jump) close();
-		if (Reg.c1.throwing || Reg.c2.throwing)
+		if (timer <= 0)
 		{
-			replay = false;
-			close();
+			if (Reg.c1.jump || Reg.c2.jump) close();
+			if (Reg.c1.throwing || Reg.c2.throwing)
+			{
+				replay = false;
+				close();
+			}
 		}
+		else timer--;
+		
 		super.update(elapsed);
 	}
 	

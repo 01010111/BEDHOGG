@@ -25,7 +25,7 @@ class PillowRest extends FlxSprite
 	
 	override public function update(elapsed:Float):Void 
 	{
-		if (FlxG.overlap(Reg.red, this))
+		if (FlxG.overlap(Reg.red, this) && Reg.red.cantMoveTimer == 0)
 		{
 			if (Reg.red.hasPillow)
 			{
@@ -37,7 +37,7 @@ class PillowRest extends FlxSprite
 				kill();
 			}
 		}
-		if (FlxG.overlap(Reg.blue, this))
+		if (FlxG.overlap(Reg.blue, this) && Reg.blue.cantMoveTimer == 0)
 		{
 			if (Reg.blue.hasPillow)
 			{

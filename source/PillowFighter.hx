@@ -20,6 +20,7 @@ class PillowFighter extends FlxSprite
 	
 	var red:Bool;
 	var pillowHealth = 50;
+	var maxHealth:Int = 20;
 	var controller:Controller;
 	var pillowBox:FlxSprite;
 	var healthMeter:FlxBar;
@@ -51,7 +52,7 @@ class PillowFighter extends FlxSprite
 		animation.add("smallSwing", [2, 5, 6, 7, 8, 8, 8], 30, false);
 		animation.add("bigSwing", [9, 10, 11, 11, 11], 30, false);
 		animation.add("throw", [12], 30, false);
-		animation.add("down", [18, 19, 18, 19, 18, 19, 18, 19, 18, 19], 10, false);
+		animation.add("down", [18, 19, 18, 19, 18, 19, 18, 19], 10, false);
 		animation.add("noPillowIdle", [14, 15], 12);
 		animation.add("noPillowRun", [14, 16, 14, 17], 8);
 		animation.add("noPillowJump", [16]);
@@ -66,7 +67,7 @@ class PillowFighter extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		
-		health = 10;
+		health = maxHealth;
 		
 		healthMeter = new FlxBar(0, 0, FlxBarFillDirection.LEFT_TO_RIGHT, 16, 2, this, "health", 0, 10);
 		healthMeter.createFilledBar(0x90ff0000, 0xff0080ff);
@@ -93,13 +94,14 @@ class PillowFighter extends FlxSprite
 	var accelerate:Float = 500;
 	var jumpTimer:Int = 0;
 	var chargeAmt:Float = 0;
+	public var cantMoveTimer:Int = 0;
 	
 	override public function update(elapsed:Float):Void 
 	{
 		healthMeter.setPosition(getMidpoint().x - 8, y - 8);
 		chargeMeter.setPosition(getMidpoint().x - 8, y - 12);
 		
-		if (health < 10) health += 0.05;
+		//if (health < 10) health += 0.05;
 		
 		acceleration.x = 0;
 		
@@ -112,8 +114,10 @@ class PillowFighter extends FlxSprite
 			drag.x = 100;
 		}
 		
-		if (FlxSpriteUtil.isFlickering(this) || !canControl) controller.canControl = false;
+		if (cantMoveTimer > 0 || !canControl) controller.canControl = false;
 		else controller.canControl = true;
+		
+		if (cantMoveTimer > 0) cantMoveTimer--;
 		
 		if (controller.charge && hasPillow) 
 		{
@@ -315,7 +319,8 @@ class PillowFighter extends FlxSprite
 					hasPillow = false;
 					var p:PillowFlight = new PillowFlight(getMidpoint(), FlxPoint.get(vx, -200), red);
 				}
-				FlxSpriteUtil.flicker(this, 1);
+				FlxSpriteUtil.flicker(this, 1.2);
+				cantMoveTimer = 45;
 				animation.play("down", true);
 				
 				Reg.state.jewels.scale.set();
@@ -331,7 +336,7 @@ class PillowFighter extends FlxSprite
 					Reg.score += 1;
 					Reg.redKO++;
 				}
-				health = 10;
+				health = maxHealth;
 			}
 			else 
 			{

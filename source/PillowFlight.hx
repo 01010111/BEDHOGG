@@ -39,7 +39,7 @@ class PillowFlight extends FlxSprite
 			if (Math.abs(velocity.x) > 100 && FlxG.overlap(this, Reg.blue))
 			{
 				kill();
-				Reg.blue.hurt(10);
+				Reg.blue.hurt(8);
 			}
 		}
 		else
@@ -47,11 +47,15 @@ class PillowFlight extends FlxSprite
 			if (Math.abs(velocity.x) > 100 && FlxG.overlap(this, Reg.red))
 			{
 				kill();
-				Reg.red.hurt(10);
+				Reg.red.hurt(8);
 			}
 		}
 		
-		if (x + width < 0 || x > Reg.state.width || y > FlxG.height * 2) super.kill();
+		if (x + width < 0 || x > Reg.state.width || y > FlxG.height * 2) 
+		{
+			Reg.state.publicPillows++;
+			super.kill();
+		}
 		
 		super.update(elapsed);
 	}

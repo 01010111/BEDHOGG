@@ -1,5 +1,6 @@
 package ;  
 
+import flixel.effects.postprocess.PostProcess;
 import flixel.FlxState;
 import flixel.FlxG;
 import flixel.tweens.FlxTween;
@@ -7,6 +8,7 @@ import flixel.math.FlxPoint;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitter;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 import flixel.effects.particles.FlxParticle;
 import flixel.tweens.FlxEase;
@@ -36,15 +38,13 @@ class ZeroOne extends FlxState
 	private var PNT_a:FlxPoint;
 	private var PNT_game:FlxPoint;
 	
-	private var timer:Int;
+	private var timer:Int = -1;
 	private var timerTime:Int = 3;
 	
 	private var warbleAmt:Float = 0.02;
 	private var warblePoint:FlxPoint;
 	
-	private var bG:FlxSprite;
-	private var bgColors:FlxGroup;
-	private var emitter:FlxEmitter;
+	private var kittyScaler:FlxTween;
 	
 	public function new() 
 	{
@@ -53,40 +53,32 @@ class ZeroOne extends FlxState
 	
 	override public function create():Void
 	{
+		//Reg.input_manager = new NewInputManager();
+		
+		#if android
+		FlxG.drawFramerate = 30;
+		#end
 		FlxG.mouse.visible = false;
 		warblePoint = new FlxPoint(1, 1);
 		
-		FlxG.camera.flash(0xFF000000, 1);
+		FlxG.camera.bgColor = 0xFF000000;
 		
-		FlxG.sound.play("assets/sounds/bling.mp3", 0.4);
+		new FlxTimer().start(0.1, addStuff);
+		new FlxTimer().start(2, goToGame);
 		
-		bG = new FlxSprite(0, 0);
-		bG.makeGraphic(FlxG.width, FlxG.height, 0xFF2040FF);
-		add(bG);
+		super.create();
+	}
+	
+	function addStuff(t:FlxTimer):Void
+	{
+		var circle:FlxSprite = new FlxSprite();
+		circle.makeGraphic(FlxG.height, FlxG.height, 0x00FFFFFF);
+		FlxSpriteUtil.screenCenter(circle);
+		FlxSpriteUtil.drawCircle(circle, -1, -1, 0, 0xFF2040FF);
+		circle.scale.set();
+		add(circle);
 		
-		bgColors = new FlxGroup();
-		add(bgColors);
-		
-		emitter = new FlxEmitter( -FlxG.width, FlxG.height);
-		
-		for (i in 0...80) {
-			var particle:FlxParticle = new FlxParticle();
-			var size:Int = Math.floor(Math.random() * 64) + 32;
-			particle.makeGraphic(Math.floor(size / 16) , size * 4, 0xFFFFFFFF);
-			particle.alpha = Math.random() * 0.5 + 0.5;
-			particle.angle = 45;
-			particle.exists = false;
-			emitter.add(particle);
-		}
-		
-		var speed:Int = 2000;
-		
-		/*emitter.setXSpeed(speed, speed);
-		emitter.setYSpeed(-speed, -speed);
-		emitter.setRotation(0, 0);
-		emitter.width = FlxG.width * 2;
-		add(emitter);
-		emitter.start(false, 0.5, 0.5);*/
+		FlxTween.tween(circle.scale, { x:2.5, y:2.5 }, 0.2);
 		
 		stageX = Math.floor(FlxG.width / 2 - 66);
 		stageY = Math.floor(FlxG.height / 2 - 64);
@@ -99,6 +91,27 @@ class ZeroOne extends FlxState
 		SPR_a = new FlxSprite(stageX + 0, stageY + 114, "assets/images/a.png");
 		SPR_01010111 = new FlxSprite(stageX + 12, stageY + 111, "assets/images/01010111.png");
 		SPR_game = new FlxSprite(stageX + 93, stageY + 112, "assets/images/game.png");
+		
+		SPR_kitty.angle = 5;
+		SPR_kitty.scale.set();
+		SPR_you.scale.set();
+		SPR_think.scale.set();
+		SPR_this.scale.set();
+		SPR_is.scale.set();
+		SPR_a.scale.set();
+		SPR_01010111.scale.set();
+		SPR_game.scale.set();
+		
+		FlxTween.tween(SPR_kitty, { angle:-5 }, 3, { type:FlxTween.PINGPONG, ease:FlxEase.sineInOut } );
+		FlxTween.tween(SPR_you.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );
+		var timerArray:Array<Float> = [for (i in 0...7) i * 0.15 + 0.1];
+		new FlxTimer().start(timerArray[0]).onComplete = function(t:FlxTimer){FlxTween.tween(SPR_think.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
+		new FlxTimer().start(timerArray[1]).onComplete = function(t:FlxTimer){FlxTween.tween(SPR_this.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
+		new FlxTimer().start(timerArray[2]).onComplete = function(t:FlxTimer){FlxTween.tween(SPR_is.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
+		new FlxTimer().start(timerArray[3]).onComplete = function(t:FlxTimer){FlxTween.tween(SPR_a.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
+		new FlxTimer().start(timerArray[4]).onComplete = function(t:FlxTimer){FlxTween.tween(SPR_01010111.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
+		new FlxTimer().start(timerArray[5]).onComplete = function(t:FlxTimer){FlxTween.tween(SPR_game.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
+		new FlxTimer().start(timerArray[6]).onComplete = function(t:FlxTimer){kittyScaler = FlxTween.tween(SPR_kitty.scale, { x:1, y:1 }, 0.4, { ease:FlxEase.elasticOut } );}
 		
 		PNT_you = new FlxPoint(SPR_you.x, SPR_you.y);
 		PNT_think = new FlxPoint(SPR_think.x, SPR_think.y);
@@ -118,12 +131,9 @@ class ZeroOne extends FlxState
 		
 		add(SPR_01010111);
 		
+		FlxG.sound.play("assets/sounds/bling.mp3", 0.4);
+		
 		timer = timerTime;
-		
-		new FlxTimer().start(3, goToGame);
-		//TweenLite.delayedCall(3, goToGame);
-		
-		super.create();
 	}
 	
 	override public function update(e:Float):Void
@@ -138,18 +148,20 @@ class ZeroOne extends FlxState
 			jiggle(SPR_a, PNT_a);
 			jiggle(SPR_game, PNT_game);
 			
-			if (SPR_kitty.scale.x == warblePoint.x) SPR_kitty.scale.x = 1 + Math.random() * warbleAmt;
-			else {
-				var newX:Float = 1 + Math.random() * 0.1;
-				SPR_kitty.scale.x = newX;
-				warblePoint.x = newX;
-			}
-			
-			if (SPR_kitty.scale.y == warblePoint.y) SPR_kitty.scale.y = 1 + Math.random() * warbleAmt;
-			else {
-				var newY:Float = 1 + Math.random() * 0.1;
-				SPR_kitty.scale.y = newY;
-				warblePoint.y = newY;
+			if (kittyScaler != null && kittyScaler.finished) {
+				if (SPR_kitty.scale.x == warblePoint.x) SPR_kitty.scale.x = 1 + Math.random() * warbleAmt;
+				else {
+					var newX:Float = 1 + Math.random() * 0.1;
+					SPR_kitty.scale.x = newX;
+					warblePoint.x = newX;
+				}
+				
+				if (SPR_kitty.scale.y == warblePoint.y) SPR_kitty.scale.y = 1 + Math.random() * warbleAmt;
+				else {
+					var newY:Float = 1 + Math.random() * 0.1;
+					SPR_kitty.scale.y = newY;
+					warblePoint.y = newY;
+				}
 			}
 			
 			warbleAmt += 0.001;
@@ -158,10 +170,6 @@ class ZeroOne extends FlxState
 		}
 		
 		timer -= 1;
-		
-		if (emitter.frequency > 0.05) emitter.frequency -= 0.0050;
-		
-		//if (FlxG.mouse.justPressed) FlxU.openURL("http://x01010111.com");
 	}
 	
 	public function jiggle(sprite:FlxSprite, point:FlxPoint):Void
@@ -175,13 +183,18 @@ class ZeroOne extends FlxState
 	
 	public function goToGame(t:FlxTimer):Void
 	{
-		FlxG.camera.fade(0xff10112c, 0.5, false, switchState);
-		//FlxG.switchState(new PlaySetup);
-	}
-	
-	public function switchState():Void
-	{
-		FlxG.switchState(new MenuState());
+		timer = -1;
+		kittyScaler = FlxTween.tween(SPR_kitty.scale, { x:0, y:0 }, 0.1, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_you.scale, { x:0, y:0 }, 0.4, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_think.scale, { x:0, y:0 }, 0.4, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_this.scale, { x:0, y:0 }, 0.3, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_is.scale, { x:0, y:0 }, 0.3, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_a.scale, { x:0, y:0 }, 0.2, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_01010111.scale, { x:0, y:0 }, 0.2, { ease:FlxEase.backIn } );
+		FlxTween.tween(SPR_game.scale, { x:0, y:0 }, 0.2, { ease:FlxEase.backIn } );
+		
+		new FlxTimer().start(0.5).onComplete = function(t:FlxTimer) { FlxG.switchState(new MenuState()); };
 	}
 	
 }
+
