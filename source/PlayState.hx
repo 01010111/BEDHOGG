@@ -11,6 +11,7 @@ import flixel.math.FlxRect;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxAxes;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 
@@ -54,7 +55,7 @@ class PlayState extends FlxState
 		instructions.borderSize = 3;
 		instructions.scale.set();
 		instructions.angle = 5;
-		FlxSpriteUtil.screenCenter(instructions);
+		instructions.screenCenter();
 		instructions.scrollFactor.set();
 		FlxTween.tween(instructions, { angle: -5 }, 1, { ease:FlxEase.sineInOut, type:FlxTween.PINGPONG } );
 		FlxTween.tween(instructions.scale, { x:1, y:1 }, 0.5, { ease:FlxEase.backOut } ).onComplete = function(t:FlxTween):Void
@@ -137,7 +138,7 @@ class PlayState extends FlxState
 		
 		jewels = new FlxSprite(0, 16);
 		jewels.loadGraphic("assets/images/jewels.png", true, 48, 16);
-		FlxSpriteUtil.screenCenter(jewels, true, false);
+		jewels.screenCenter(FlxAxes.X);
 		jewels.scrollFactor.set();
 		jewels.angle = -10;
 		add(jewels);
@@ -181,6 +182,9 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void 
 	{
+		if (FlxG.keys.justPressed.ESCAPE)
+			FlxG.fullscreen = !FlxG.fullscreen;
+		
 		var target:FlxPoint = FlxPoint.get(width * 0.5, 0);
 		if (Reg.timer > 180 && Reg.red != null && Reg.blue != null)
 		{

@@ -1,12 +1,11 @@
 package;
 
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.effects.FlxWaveSprite.FlxWaveMode;
+import flixel.addons.effects.chainable.FlxWaveEffect.FlxWaveMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.XboxButtonID;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -20,7 +19,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		Reg.sounds = new Sounds();
-		FlxG.sound.playMusic("assets/music/title.mp3", 0.75);
+		FlxG.sound.playMusic("title", 0.75);
 		
 		if (Reg.c1 != null) Reg.c1.superDestroy();
 		if (Reg.c2 != null) Reg.c2.superDestroy();
@@ -38,7 +37,7 @@ class MenuState extends FlxState
 		
 		var title:FlxSprite = new FlxSprite(0, 0, "assets/images/title.png");
 		title.scale.set();
-		FlxSpriteUtil.screenCenter(title);
+		title.screenCenter();
 		title.angle = 5;
 		add(title);
 		FlxTween.tween(title, { angle: -5 }, 1.5, { type:FlxTween.PINGPONG } );
@@ -70,6 +69,9 @@ class MenuState extends FlxState
 	
 	override public function update(elapsed:Float):Void 
 	{
+		if (FlxG.keys.justPressed.ESCAPE)
+			FlxG.fullscreen = !FlxG.fullscreen;
+		
 		if (state == 0) askP1Input();
 		else if (state == 1) askP2Input();
 		else if (state == 2) 
@@ -92,12 +94,14 @@ class MenuState extends FlxState
 			Reg.c1 = new Controller(false);
 			state++;
 		}
-		else if (FlxG.gamepads.firstActive != null && FlxG.gamepads.firstActive.justReleased(XboxButtonID.A))
+		//else if (FlxG.gamepads.firstActive != null && FlxG.gamepads.firstActive.justReleased(XboxButtonID.A))
+		else if (FlxG.gamepads.firstActive != null && FlxG.gamepads.firstActive.justReleased.A)
 		{
 			Reg.c1 = new Controller(false, FlxG.gamepads.firstActive);
 			state++;
 		}
-		else if (FlxG.gamepads.lastActive != null && FlxG.gamepads.lastActive.justReleased(XboxButtonID.A))
+		//else if (FlxG.gamepads.lastActive != null && FlxG.gamepads.lastActive.justReleased(XboxButtonID.A))
+		else if (FlxG.gamepads.lastActive != null && FlxG.gamepads.lastActive.justReleased.A)
 		{
 			Reg.c1 = new Controller(false, FlxG.gamepads.lastActive);
 			state++;
@@ -127,12 +131,12 @@ class MenuState extends FlxState
 				Reg.c2 = new Controller(false);
 				state++;
 			}
-			else if (FlxG.gamepads.firstActive != null && FlxG.gamepads.firstActive.justReleased(XboxButtonID.A))
+			else if (FlxG.gamepads.firstActive != null && FlxG.gamepads.firstActive.justReleased.A)
 			{
 				Reg.c2 = new Controller(false, FlxG.gamepads.firstActive);
 				state++;
 			}
-			else if (FlxG.gamepads.lastActive != null && FlxG.gamepads.lastActive.justReleased(XboxButtonID.A))
+			else if (FlxG.gamepads.lastActive != null && FlxG.gamepads.lastActive.justReleased.A)
 			{
 				Reg.c2 = new Controller(false, FlxG.gamepads.lastActive);
 				state++;
@@ -157,7 +161,7 @@ class MenuState extends FlxState
 		FlxG.sound.music.fadeOut(1);
 		FlxTween.tween(s, { alpha:1 }, 1).onComplete = function(t:FlxTween):Void
 		{
-			FlxG.sound.playMusic("assets/music/play.mp3", 0.3);
+			FlxG.sound.playMusic("play", 0.3);
 			FlxG.switchState(new PlayState());
 		}
 	}

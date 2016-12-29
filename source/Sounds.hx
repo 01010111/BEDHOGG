@@ -17,11 +17,11 @@ class Sounds extends FlxGroup
 	public function new()
 	{
 		super();
-		pillowHit = ["assets/sounds/hit1.mp3", "assets/sounds/hit2.mp3", "assets/sounds/hit3.mp3", "assets/sounds/hit4.mp3", "assets/sounds/hit5.mp3"];
-		swing = ["assets/sounds/swing1.mp3", "assets/sounds/swing2.mp3", "assets/sounds/swing3.mp3"];
-		jump = ["assets/sounds/jump1.mp3", "assets/sounds/jump2.mp3", "assets/sounds/jump3.mp3"];
-		throwing = ["assets/sounds/throw.mp3"];
-		knockDown = ["assets/sounds/ko.mp3"];
+		pillowHit = ["hit1", "hit2", "hit3", "hit4", "hit5"];
+		swing = ["swing1", "swing2", "swing3"];
+		jump = ["jump1", "jump2", "jump3"];
+		throwing = ["throw"];
+		knockDown = ["ko"];
 	}
 	
 	public function play(s:Array<String>, v:Float = 0.5):Void

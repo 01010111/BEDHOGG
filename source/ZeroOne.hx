@@ -58,7 +58,7 @@ class ZeroOne extends FlxState
 		
 		FlxG.camera.flash(0xFF000000, 1);
 		
-		FlxG.sound.play("assets/sounds/bling.mp3", 0.4);
+		FlxG.sound.play("bling", 0.4);
 		
 		bG = new FlxSprite(0, 0);
 		bG.makeGraphic(FlxG.width, FlxG.height, 0xFF2040FF);

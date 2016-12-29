@@ -20,7 +20,7 @@
 	<window if="web" orientation="portrait"  />
 	
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+	<window if="desktop" orientation="landscape" fullscreen="true" resizable="true" />
 	
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
@@ -29,7 +29,48 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<assets path="assets" />
+	
+	<assets path="assets/images" embed="true" />
+	<assets path="assets/sounds/mp3" if="flash" embed="true">
+		<sound path="bling.mp3"		id="bling"	/>
+		<sound path="hit1.mp3"		id="hit1"	/>
+		<sound path="hit2.mp3"		id="hit2"	/>
+		<sound path="hit3.mp3"		id="hit3"	/>
+		<sound path="hit4.mp3"		id="hit4"	/>
+		<sound path="hit5.mp3"		id="hit5"	/>
+		<sound path="jump1.mp3"		id="jump1"	/>
+		<sound path="jump2.mp3"		id="jump2"	/>
+		<sound path="jump3.mp3"		id="jump3"	/>
+		<sound path="ko.mp3"		id="ko"		/>
+		<sound path="swing1.mp3"	id="swing1"	/>
+		<sound path="swing2.mp3"	id="swing2"	/>
+		<sound path="swing3.mp3"	id="swing3"	/>
+		<sound path="throw.mp3"		id="throw"	/>
+	</assets>
+	<assets path="assets/sounds/ogg" if="desktop" embed="true">
+		<sound path="bling.ogg"		id="bling"	/>
+		<sound path="hit1.ogg"		id="hit1"	/>
+		<sound path="hit2.ogg"		id="hit2"	/>
+		<sound path="hit3.ogg"		id="hit3"	/>
+		<sound path="hit4.ogg"		id="hit4"	/>
+		<sound path="hit5.ogg"		id="hit5"	/>
+		<sound path="jump1.ogg"		id="jump1"	/>
+		<sound path="jump2.ogg"		id="jump2"	/>
+		<sound path="jump3.ogg"		id="juogg"	/>
+		<sound path="ko.ogg"		id="ko"		/>
+		<sound path="swing1.ogg"	id="swing1"	/>
+		<sound path="swing2.ogg"	id="swing2"	/>
+		<sound path="swing3.ogg"	id="swing3"	/>
+		<sound path="throw.ogg"		id="throw"	/>
+	</assets>
+	<assets path="assets/music/mp3" if="flash" embed="true">
+		<sound path="title.mp3"		id="title"	/>
+		<sound path="play.mp3"		id="play"	/>
+	</assets>
+	<assets path="assets/music/ogg" if="desktop" embed="true">
+		<sound path="title.ogg"		id="title"	/>
+		<sound path="play.ogg"		id="play"	/>
+	</assets>
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 

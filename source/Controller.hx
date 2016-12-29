@@ -4,7 +4,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.input.FlxPointer;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.XboxButtonID;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
@@ -51,13 +51,13 @@ class Controller extends FlxGroup
 			}
 			else if (pad != null)
 			{
-				if (pad.pressed(XboxButtonID.DPAD_LEFT) || pad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) < -0.25) left = true;
-				if (pad.pressed(XboxButtonID.DPAD_RIGHT) || pad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0.25) right = true;
-				if (pad.justPressed(XboxButtonID.A)) jump = true;
-				if (pad.anyPressed([XboxButtonID.B, XboxButtonID.Y])) charge = true;
-				if (pad.justPressed(XboxButtonID.X)) smallSwing = true;
-				if (pad.justReleased(XboxButtonID.B)) bigSwing = true;
-				if (pad.justReleased(XboxButtonID.Y)) throwing = true;
+				if (pad.pressed.DPAD_LEFT || pad.getAxis(FlxGamepadInputID.LEFT_ANALOG_STICK) < -0.25) left = true;
+				if (pad.pressed.DPAD_RIGHT || pad.getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK) > 0.25) right = true;
+				if (pad.justPressed.A) jump = true;
+				if (pad.pressed.B || pad.pressed.Y) charge = true;
+				if (pad.justPressed.X) smallSwing = true;
+				if (pad.justReleased.B) bigSwing = true;
+				if (pad.justReleased.Y) throwing = true;
 			}
 			else 
 			{
